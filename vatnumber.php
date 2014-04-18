@@ -260,6 +260,7 @@ class VatNumber extends TaxManagerModule
 		);
 
 		$helper = new HelperForm();
+		$helper->module = $this;
 		$helper->show_toolbar = false;
 		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));

@@ -129,8 +129,10 @@ class VatNumber extends TaxManagerModule
 			//Slovenia
 			'RO' => 'RO',
 			//Romania
-			'BG' => 'BG'
+			'BG' => 'BG',
 			//Bulgaria
+			'HR' => 'HR',
+			//Croatia
 		);
 
 		return $intracom_array;

@@ -33,9 +33,7 @@ class VatNumber extends TaxManagerModule
 	{
 		$this->name = 'vatnumber';
 		$this->tab = 'billing_invoicing';
-
-		$this->version = '1.7';
-
+		$this->version = '1.7.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -131,8 +129,10 @@ class VatNumber extends TaxManagerModule
 			//Slovenia
 			'RO' => 'RO',
 			//Romania
-			'BG' => 'BG'
+			'BG' => 'BG',
 			//Bulgaria
+			'HR' => 'HR',
+			//Croatia
 		);
 
 		return $intracom_array;

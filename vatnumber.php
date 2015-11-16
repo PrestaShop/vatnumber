@@ -225,7 +225,7 @@ class VatNumber extends TaxManagerModule
 					array(
 						'type' => 'select',
 						'label' => $this->l('Customers\' country'),
-						'desc' => $this->l('Operate a filter on customers\' country.'),
+						'desc' => $this->l('Filter customers\' country.'),
 						'name' => 'VATNUMBER_COUNTRY',
 						'required' => false,
 						'default_value' => (int)$this->context->country->id,

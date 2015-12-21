@@ -148,35 +148,47 @@ class VatNumber extends TaxManagerModule
 		if (empty($vat_number))
 			return array();
 		$vat_number = str_replace(' ', '', $vat_number);
+                $vat_number = str_replace('-', '', $vat_number);
 		$prefix = Tools::substr($vat_number, 0, 2);
 		if (array_search($prefix, self::getPrefixIntracomVAT()) === false)
 			return array(Tools::displayError('Invalid VAT number'));
 		$vat = Tools::substr($vat_number, 2);
-		$url = 'http://ec.europa.eu/taxation_customs/vies/viesquer.do?ms='.urlencode($prefix).'&iso='.urlencode($prefix).'&vat='.urlencode($vat);
-		@ini_set('default_socket_timeout', 2);
-		for ($i = 0; $i < 3; $i++)
+		$url = 'http://ec.europa.eu/taxation_customs/vies/vatResponse.html';
+		$post_data = http_build_query(
+			array(
+				'action' => 'check',
+				'check' => 'Verify',
+				'memberStateCode' => urlencode($prefix),
+				'number' => urlencode($vat),
+				'traderName' => '',
+				'traderCompanyType' => '',
+				'traderStreet' => '',
+				'traderPostalCode' => '',
+				'requesterMemberStateCode' => '',
+				'requesterNumber' => ''
+			)
+		);
+
+		$context = stream_context_create(array(
+			'http' => array(
+				'method'  => 'POST',
+				'content' => $post_data,
+				'header'  => 'Content-type: application/x-www-form-urlencoded',
+				'timeout' => 5,
+			)
+		));
+
+		if ($page_res = Tools::file_get_contents($url, false, $context))
 		{
-			if ($page_res = Tools::file_get_contents($url))
+			if (preg_match('/invalid VAT number/i', $page_res))
 			{
-				if (preg_match('/invalid VAT number/i', $page_res))
-				{
-					@ini_restore('default_socket_timeout');
-
-					return array(Tools::displayError('VAT number not found'));
-				}
-				else if (preg_match('/valid VAT number/i', $page_res))
-				{
-					@ini_restore('default_socket_timeout');
-
-					return array();
-				}
-				else
-					++$i;
+				return array(Tools::displayError('VAT number not found'));
 			}
-			else
-				sleep(1);
+			else if (preg_match('/valid VAT number/i', $page_res))
+			{
+				return array();
+			}
 		}
-		@ini_restore('default_socket_timeout');
 
 		return array(Tools::displayError('VAT number validation service unavailable'));
 	}

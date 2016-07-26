@@ -48,6 +48,7 @@ class VatNumber extends TaxManagerModule
 
 		$this->displayName = $this->l('European VAT number');
 		$this->description = $this->l('Enables you to enter the intra-community VAT number when creating the address. You must fill in the company field to allow entering the VAT number.');
+		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6.99.99');
 	}
 
 	public function install()

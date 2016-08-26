@@ -53,7 +53,10 @@ class VatNumber extends TaxManagerModule
 
 	public function install()
 	{
-		return (parent::install() && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1));
+		return
+		    parent::install()
+		    && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1)
+		    && $this->registerHook('actionValidateCustomerAddressForm');
 	}
 
 	public function uninstall()
@@ -290,5 +293,21 @@ class VatNumber extends TaxManagerModule
 			'VATNUMBER_COUNTRY' => Tools::getValue('VATNUMBER_COUNTRY', Configuration::get('VATNUMBER_COUNTRY')),
 			'VATNUMBER_CHECKING' => Tools::getValue('VATNUMBER_CHECKING', Configuration::get('VATNUMBER_CHECKING')),
 		);
+	}
+
+	public function hookActionValidateCustomerAddressForm(&$params)
+	{
+		$form = $params['form'];
+		$is_valid = true;
+
+		if (($vatNumber = $form->getField('vat_number')) && Configuration::get('VATNUMBER_MANAGEMENT') && Configuration::get('VATNUMBER_CHECKING')) {
+			$isAVatNumber = VatNumber::WebServiceCheck($vatNumber->getValue());
+			if (is_array($isAVatNumber) && count($isAVatNumber) > 0) {
+				$vatNumber->addError($isAVatNumber[0]);
+				$is_valid = false;
+			}
+		}
+
+		return $is_valid;
 	}
 }

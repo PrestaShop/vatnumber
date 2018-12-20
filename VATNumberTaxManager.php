@@ -51,11 +51,12 @@ class VATNumberTaxManager implements TaxManagerInterface
 		static $cached_address = NULL;
 
 		if ($address->id_customer != NULL) {
-			$cached_address = $cached_address;
+			$cached_address = $address;
 		}
 
 		// Now, check on the cached address object
-		return (!empty($cached_address->vat_number)
+		return (null !== $cached_address 
+			&& !empty($cached_address->vat_number)
 			&& $cached_address->id_country != Configuration::get('VATNUMBER_COUNTRY')
 			&& Configuration::get('VATNUMBER_MANAGEMENT')
 		);

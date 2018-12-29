@@ -55,10 +55,10 @@ class VATNumberTaxManager implements TaxManagerInterface
 		}
 
 		// Now, check on the cached address object
-		return (null !== $cached_address 
-			&& !empty($cached_address->vat_number)
-			&& $cached_address->id_country != Configuration::get('VATNUMBER_COUNTRY')
-			&& Configuration::get('VATNUMBER_MANAGEMENT')
+		return (!empty($cached_address->vat_number)
+		    && !empty($cached_address->id_country)
+		    && $cached_address->id_country != Configuration::get('VATNUMBER_COUNTRY')
+		    && Configuration::get('VATNUMBER_MANAGEMENT')
 		);
 	}
 

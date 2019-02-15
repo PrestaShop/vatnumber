@@ -298,13 +298,13 @@ class VatNumber extends TaxManagerModule
 	public function hookActionValidateCustomerAddressForm(&$params)
 	{
 		$form = $params['form'];
-		$is_valid = true;
+		$is_valid = 1;
 
 		if (($vatNumber = $form->getField('vat_number')) && Configuration::get('VATNUMBER_MANAGEMENT') && Configuration::get('VATNUMBER_CHECKING')) {
 			$isAVatNumber = VatNumber::WebServiceCheck($vatNumber->getValue());
 			if (is_array($isAVatNumber) && count($isAVatNumber) > 0) {
 				$vatNumber->addError($isAVatNumber[0]);
-				$is_valid = false;
+				$is_valid = 0;
 			}
 		}
 

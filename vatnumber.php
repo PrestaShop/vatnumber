@@ -158,9 +158,9 @@ class VatNumber extends TaxManagerModule
 		$vat = Tools::substr($vat_number, 2);
 		$url = 'http://ec.europa.eu/taxation_customs/vies/viesquer.do?ms='.urlencode($prefix).'&iso='.urlencode($prefix).'&vat='.urlencode($vat);
 		@ini_set('default_socket_timeout', 2);
-		for ($i = 0; $i < 3; $i++)
+		for ($i = 0; $i < 2; $i++)
 		{
-			if ($page_res = Tools::file_get_contents($url))
+			if ($page_res = Tools::file_get_contents($url,false,null,10))
 			{
 				if (preg_match('/invalid VAT number/i', $page_res))
 				{

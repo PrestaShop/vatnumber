@@ -54,9 +54,9 @@ class VatNumber extends TaxManagerModule
 	public function install()
 	{
 		return
-		    parent::install()
-		    && Configuration::updateValue('VATNUMBER_MANAGEMENT', 1)
-		    && $this->registerHook('actionValidateCustomerAddressForm');
+			parent::install()
+			&& Configuration::updateValue('VATNUMBER_MANAGEMENT', 1)
+			&& $this->registerHook('actionValidateCustomerAddressForm');
 	}
 
 	public function uninstall()
@@ -204,21 +204,6 @@ class VatNumber extends TaxManagerModule
 
 	public function renderForm()
 	{
-		$countries = Country::getCountries($this->context->language->id);
-
-		$countries_fmt = array(
-			0 => array(
-				'id' => 0,
-				'name' => $this->l('-- Choose a country --')
-			)
-		);
-
-		foreach ($countries as $country)
-			$countries_fmt[] = array(
-				'id' => $country['id_country'],
-				'name' => $country['name']
-			);
-
 		$fields_form = array(
 			'form' => array(
 				'legend' => array(
@@ -234,8 +219,8 @@ class VatNumber extends TaxManagerModule
 						'required' => false,
 						'default_value' => (int)$this->context->country->id,
 						'options' => array(
-							'query' => $countries_fmt,
-							'id' => 'id',
+							'query' => $this->getCountries(),
+							'id' => 'id_country',
 							'name' => 'name',
 						)
 					),
@@ -293,6 +278,26 @@ class VatNumber extends TaxManagerModule
 			'VATNUMBER_COUNTRY' => Tools::getValue('VATNUMBER_COUNTRY', Configuration::get('VATNUMBER_COUNTRY')),
 			'VATNUMBER_CHECKING' => Tools::getValue('VATNUMBER_CHECKING', Configuration::get('VATNUMBER_CHECKING')),
 		);
+	}
+
+	protected function getCountries($active = false)
+	{
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+			'SELECT c.id_country, cl.`name`
+			FROM `' . _DB_PREFIX_ . 'country` c
+			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int)$this->context->language->id . ')
+			WHERE 1 ' . ($active ? ' AND c.active = 1 ' : '') . '
+			ORDER BY cl.`name` ASC'
+		);
+
+		if ($result) {
+			array_unshift($result, array(
+				'id_country' => 0,
+				'name' => $this->l('-- Choose a country --')
+			));
+		}
+
+		return $result;
 	}
 
 	public function hookActionValidateCustomerAddressForm(&$params)

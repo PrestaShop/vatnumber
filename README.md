@@ -2,7 +2,30 @@
 
 ## About
 
-Enables you to enter the intra-community VAT number when creating the address. You must fill in the company field to allow entering the VAT number.
+Enables you to enter the intra-community VAT number when creating the address.
+You must fill in the company field to allow entering the VAT number.
+
+VAT number can be checked thanks to European Commission web service (optional).
+
+## Multistore compatibility
+
+This module is compatible with the multistore :heavy_check_mark: <br/>
+It can be configured differently from one store to another.<br/>
+It can be configured quickly in the same way on all stores thanks to the all shops context or the group of shops.<br/>
+It can be activated on one store and deactivated on another
+
+## Requirements
+
+- PrestaShop: 1.7.7.0
+- PHP: 7.1 minimum or later
+- PHP extensions : ctype, soap
+
+## Installation
+
+Install dependencies
+```
+composer install
+```
 
 ## Reporting issues
 

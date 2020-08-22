@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.module.vatnumber.vies_api:
+    class: 'DragonBe\Vies\Vies'
+
+  prestashop.module.vatnumber.vat_sum_validator:
+    class: 'PrestaShop\Module\VatNumber\VatSumValidator'
+    arguments:
+      - '@prestashop.module.vatnumber.vies_api'
+
+  prestashop.module.vatnumber.webservice:
+    class: 'PrestaShop\Module\VatNumber\VatWebService'
+    arguments:
+      - '@prestashop.module.vatnumber.vies_api'

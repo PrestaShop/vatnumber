@@ -300,7 +300,7 @@ class VatNumber extends TaxManagerModule
 		$form = $params['form'];
 		$is_valid = true;
 
-		if (($vatNumber = $form->getField('vat_number')) && Configuration::get('VATNUMBER_MANAGEMENT') && Configuration::get('VATNUMBER_CHECKING')) {
+		if (($vatNumber = $form->getField('vat_number')) && Configuration::get('VATNUMBER_MANAGEMENT') && Configuration::get('VATNUMBER_CHECKING') && VatNumber::isApplicable(Tools::getValue('id_country'))) {
 			$isAVatNumber = VatNumber::WebServiceCheck($vatNumber->getValue());
 			if (is_array($isAVatNumber) && count($isAVatNumber) > 0) {
 				$vatNumber->addError($isAVatNumber[0]);

@@ -166,7 +166,7 @@ class VatNumber extends TaxManagerModule
 				{
 					@ini_restore('default_socket_timeout');
 
-					return array(Tools::displayError('VAT number not found'));
+					return array(Tools::displayError('VAT number not found, please verify the <a href="https://ec.europa.eu/taxation_customs/vies/?locale=en" target="_blank" rel="noopener">VIES registry</a>.'));
 				}
 				else if (preg_match('/valid VAT number/i', $page_res))
 				{

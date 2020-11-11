@@ -144,7 +144,12 @@ class VatNumber extends TaxManagerModule
 
 	public static function isApplicable($id_country)
 	{
-		return (((int)$id_country && array_key_exists(Country::getIsoById($id_country), self::getPrefixIntracomVAT())) ? 1 : 0);
+		if( (int)Configuration::get('VATNUMBER_COUNTRY') == (int)$id_country) 
+		{
+			return 0;
+		} else {
+			return (((int)$id_country && array_key_exists(Country::getIsoById($id_country), self::getPrefixIntracomVAT())) ? 1 : 0);
+		}
 	}
 
 	public static function WebServiceCheck($vat_number)
@@ -154,7 +159,7 @@ class VatNumber extends TaxManagerModule
 		$vat_number = str_replace(' ', '', $vat_number);
 		$prefix = Tools::substr($vat_number, 0, 2);
 		if (array_search($prefix, self::getPrefixIntracomVAT()) === false)
-			return array(Tools::displayError('Invalid VAT number'));
+			return array(Tools::displayError('Invalid VAT number format, please use country prefix like "IT".'));
 		$vat = Tools::substr($vat_number, 2);
 		$url = 'http://ec.europa.eu/taxation_customs/vies/viesquer.do?ms='.urlencode($prefix).'&iso='.urlencode($prefix).'&vat='.urlencode($vat);
 		@ini_set('default_socket_timeout', 2);
@@ -166,7 +171,7 @@ class VatNumber extends TaxManagerModule
 				{
 					@ini_restore('default_socket_timeout');
 
-					return array(Tools::displayError('VAT number not found'));
+					return array(Tools::displayError('VAT number not found, please verify the <a href="https://ec.europa.eu/taxation_customs/vies/?locale=en" target="_blank" rel="noopener">VIES registry</a>.'));	
 				}
 				else if (preg_match('/valid VAT number/i', $page_res))
 				{
@@ -300,7 +305,7 @@ class VatNumber extends TaxManagerModule
 		$form = $params['form'];
 		$is_valid = true;
 
-		if (($vatNumber = $form->getField('vat_number')) && Configuration::get('VATNUMBER_MANAGEMENT') && Configuration::get('VATNUMBER_CHECKING')) {
+		if (($vatNumber = $form->getField('vat_number')) && Configuration::get('VATNUMBER_MANAGEMENT') && Configuration::get('VATNUMBER_CHECKING') && VatNumber::isApplicable(Tools::getValue('id_country'))) {
 			$isAVatNumber = VatNumber::WebServiceCheck($vatNumber->getValue());
 			if (is_array($isAVatNumber) && count($isAVatNumber) > 0) {
 				$vatNumber->addError($isAVatNumber[0]);

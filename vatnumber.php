@@ -147,7 +147,7 @@ class VatNumber extends TaxManagerModule
 		if ((int) Configuration::get('VATNUMBER_COUNTRY') === (int) $id_country) {
 			return 0;
 		} else {
-			return (((int)$id_country && array_key_exists(Country::getIsoById($id_country), self::getPrefixIntracomVAT())) ? 1 : 0);
+			return (((int) $id_country && array_key_exists(Country::getIsoById($id_country), self::getPrefixIntracomVAT())) ? 1 : 0);
 		}
 	}
 

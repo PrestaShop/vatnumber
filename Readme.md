@@ -1,7 +1,5 @@
 # European VAT number
 
-**This module has been archived, it’s no longer maintained but you still can fork it if you need it for your shop.**
-
 ## About
 
 Enables you to enter the intra-community VAT number when creating the address. You must fill in the company field to allow entering the VAT number.
